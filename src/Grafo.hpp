@@ -27,6 +27,7 @@ class Grafo
         void removerAresta(int origem, int destino);
 
         void imprimirGrafo();
+        void imprimirSolucao();
 
         //heuristica gulosa para o problema CMSTP
         void gulosoCMSTP(int raiz, int capacidade);
