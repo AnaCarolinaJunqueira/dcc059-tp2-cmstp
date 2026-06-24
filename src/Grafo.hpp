@@ -26,7 +26,10 @@ class Grafo
         void adicionarAresta(int origem, int destino, double custo);
         void removerAresta(int origem, int destino);
 
-        void imprimirGrafo();//falta implementar esse daqui
+        void imprimirGrafo();
+
+        //heuristica gulosa para o problema CMSTP
+        void gulosoCMSTP(int raiz, int capacidade);
 };
 
 #endif

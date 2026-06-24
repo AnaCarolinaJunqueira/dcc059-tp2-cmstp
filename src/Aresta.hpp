@@ -3,13 +3,15 @@
 
 class Aresta {
     private:
+        int origem;
         int destino;
         double custo;
 
     public:
         //construtor        
-        Aresta(int destino, double custo);
-        
+        Aresta(int origem, int destino, double custo);
+
+        int getOrigem();
         int getDestino();
         double getCusto();
 

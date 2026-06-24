@@ -34,11 +34,11 @@ void Grafo::removerVertice(int id){
 
 void Grafo::adicionarAresta(int origem, int destino, double custo){
     adj[origem].push_back(
-        Aresta(destino, custo) 
+        Aresta(origem, destino, custo) 
     );
 
     adj[destino].push_back(
-        Aresta(origem, custo)
+        Aresta(destino, origem, custo)
     );
 }
 
@@ -60,3 +60,24 @@ void Grafo::removerAresta(int origem, int destino){
         }
     }
 }
+
+void Grafo::imprimirGrafo(){
+    //indica a quantidade de vértices
+    cout << vertices.size() << endl;
+
+    //vertices
+    for(int i = 0; i < vertices.size(); i++){
+        cout << vertices[i].getId() << endl;
+    }
+
+    //arestas
+    for(int i = 0; i < adj.size(); i++){
+        for(int j = 0; j < adj[i].size(); j++){
+            if(adj[i][j].getOrigem() < adj[i][j].getDestino()){
+                cout << adj[i][j].getOrigem() << " " << adj[i][j].getDestino() << endl;
+            }
+        }
+    }
+}
+
+//Heuristica gulosa para o problema CMSTP
