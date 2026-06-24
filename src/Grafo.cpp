@@ -151,8 +151,5 @@ void Grafo::gulosoCMSTP(int raiz, int capacidade)
 
         //atualiza demanda
         demandaTotal += vertices[melhorDestino].getDemanda();
-
-        //adiciona na solucao
-        solucao.adicionarAresta(melhorOrigem, melhorDestino, menorCusto);
     }
 }
