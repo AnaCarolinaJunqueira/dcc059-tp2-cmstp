@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -11,9 +12,12 @@ Grafo::Grafo(){
     capacidade = 0;
 }
 
-void Grafo::criarGrafo(int quantidadedeVertices){
+void Grafo::criarGrafo(int quantidadedeVertices)
+{
     n = quantidadedeVertices;
-    matriz.assign(n, vector<double>(n,0));
+
+    matriz.assign(n, vector<double>(n, 0));
+    demanda.assign(n, 0);
 }
 
 void Grafo::setDeposito(int d){
@@ -40,6 +44,58 @@ double Grafo::getCusto(int u, int v){
 int Grafo::getDemanda(int v){
     return demanda[v];
 }
+
+bool Grafo::lerInstancia(string nomeArquivo)
+{
+    ifstream arquivo(nomeArquivo);
+
+    if (!arquivo.is_open())
+    {
+        cout << "Erro ao abrir o arquivo!" << endl;
+        return false;
+    }
+
+    string nomeInstancia;
+    int quantidadeClientes;
+
+    // Lê o nome da instância
+    arquivo >> nomeInstancia;
+
+    // Lê a quantidade de clientes
+    arquivo >> quantidadeClientes;
+
+    // Cria o grafo (clientes + depósito)
+    criarGrafo(quantidadeClientes + 1);
+
+    // O depósito é o último vértice
+    deposito = quantidadeClientes;
+
+    // Nas instâncias tc e te todos os clientes têm demanda 1
+    for (int i = 0; i < quantidadeClientes; i++)
+    {
+        demanda[i] = 1;
+    }
+
+    // O depósito possui demanda 0
+    demanda[deposito] = 0;
+
+    // Lê a matriz de custos
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            double custo;
+            arquivo >> custo;
+
+            inserirAresta(i, j, custo);
+        }
+    }
+
+    arquivo.close();
+
+    return true;
+}
+
 
 /*//Heuristica gulosa para o problema CMSTP
 void Grafo::gulosoCMSTP(int raiz, int capacidade)

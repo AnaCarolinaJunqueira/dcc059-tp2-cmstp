@@ -38,6 +38,8 @@ class Grafo
 
         double getCusto(int u, int v);
         int getDemanda(int v);
+
+        bool lerInstancia(string nomeArquivo);
 };
 
 #endif
