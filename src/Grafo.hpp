@@ -2,8 +2,6 @@
 #define GRAFO_HPP
 
 #include <vector>
-#include "Vertice.hpp"
-#include "Aresta.hpp"
 #include <iostream>
 
 using namespace std;
@@ -11,26 +9,35 @@ using namespace std;
 class Grafo
 {
     private:
-        //lista de vertices do grafo
-        vector<Vertice> vertices;
+        //quantidade de vertices
+        int n;
 
-        //lista de adjacência
-        vector<vector<Aresta>> adj;
+        //vertice raiz
+        int deposito;
+
+        //capacidade Q
+        int capacidade;
+
+        //demanda de cada vertice
+        vector<int> demanda;
+
+        //matriz de custos
+        vector<vector<double>> matriz;
 
     public:
         Grafo();
 
-        void adicionarVertice(int id, int demanda);
-        void removerVertice(int id);
+        //criação dos vertices
+        void criarGrafo(int quantidadedeVertices);
 
-        void adicionarAresta(int origem, int destino, double custo);
-        void removerAresta(int origem, int destino);
+        void setDeposito(int d);
+        void setCapacidade(int q);
+        void setDemanda(int vertice, int peso);
 
-        void imprimirGrafo();
-        void imprimirSolucao();
+        void inserirAresta(int u, int v, double custo);
 
-        //heuristica gulosa para o problema CMSTP
-        void gulosoCMSTP(int raiz, int capacidade);
+        double getCusto(int u, int v);
+        int getDemanda(int v);
 };
 
 #endif
