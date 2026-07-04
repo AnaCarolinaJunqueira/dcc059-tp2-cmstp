@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -112,6 +114,105 @@ double Grafo::gulosoCMSTP() {
     }
     
     return custoTotal;
+}
+
+double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
+    double melhorCustoGeral = 99999999.0;
+
+    // Estrutura simples para organizar as arestas candidatas
+    struct ArestaCandidata {
+        int origem;
+        int destino;
+        double custo;
+    };
+
+    // O algoritmo roda várias vezes para tentar achar a melhor combinação (o professor exige pelo menos 30)
+    for (int iter = 0; iter < numIteracoes; iter++) {
+        vector<bool> visitado(n, false);
+        visitado[deposito] = true;
+
+        vector<int> idRamo(n, -1);
+        vector<int> cargaRamo(n, 0);
+
+        double custoTotal = 0.0;
+        int verticesConectados = 1;
+        bool solucaoValida = true;
+
+        while (verticesConectados < n) {
+            vector<ArestaCandidata> candidatas;
+            double menorCustoValido = 99999999.0;
+            double maiorCustoValido = -1.0;
+
+            // Encontra todas as arestas válidas 
+            for (int i = 0; i < n; i++) {
+                if (!visitado[i]) continue;
+
+                for (int j = 0; j < n; j++) {
+                    if (visitado[j]) continue;
+                    
+                    double custo = matriz[i][j];
+                    if (custo <= 0) continue; 
+
+                    int demandaDestino = demanda[j];
+                    bool ehValida = false;
+
+                    if (i == deposito) {
+                        if (demandaDestino <= capacidade) ehValida = true;
+                    } else {
+                        int idSubarvoreAtual = idRamo[i];
+                        if (cargaRamo[idSubarvoreAtual] + demandaDestino <= capacidade) ehValida = true;
+                    }
+
+                    // Guarda a aresta se ela couber no ramo
+                    if (ehValida) {
+                        candidatas.push_back({i, j, custo});
+                        if (custo < menorCustoValido) menorCustoValido = custo;
+                        if (custo > maiorCustoValido) maiorCustoValido = custo;
+                    }
+                }
+            }
+
+            if (candidatas.empty()) {
+                solucaoValida = false; // A árvore "travou" em um beco sem saída
+                break;
+            }
+
+            // A Mágica do GRASP: Define o teto de custo com base no parâmetro Alfa
+            double limiteCusto = menorCustoValido + alpha * (maiorCustoValido - menorCustoValido);
+
+            // Cria a Lista Restrita de Candidatos (LRC)
+            vector<ArestaCandidata> lrc;
+            for (int k = 0; k < candidatas.size(); k++) {
+                if (candidatas[k].custo <= limiteCusto) {
+                    lrc.push_back(candidatas[k]);
+                }
+            }
+
+            // Sorteia UMA aresta aleatória de dentro da lista restrita
+            int indiceSorteado = rand() % lrc.size();
+            ArestaCandidata escolhida = lrc[indiceSorteado];
+
+            // Atualiza a árvore com a aresta sorteada
+            visitado[escolhida.destino] = true;
+            custoTotal += escolhida.custo;
+            verticesConectados++;
+
+            if (escolhida.origem == deposito) {
+                idRamo[escolhida.destino] = escolhida.destino;
+                cargaRamo[escolhida.destino] = demanda[escolhida.destino];
+            } else {
+                int subarvore = idRamo[escolhida.origem];
+                idRamo[escolhida.destino] = subarvore;
+                cargaRamo[subarvore] += demanda[escolhida.destino];
+            }
+        }
+
+        // Se conectou todo mundo e o custo foi o menor visto até agora, salva!
+        if (solucaoValida && custoTotal < melhorCustoGeral) {
+            melhorCustoGeral = custoTotal;
+        }
+    }
+    return melhorCustoGeral;
 }
 
 /*//Heuristica gulosa para o problema CMSTP

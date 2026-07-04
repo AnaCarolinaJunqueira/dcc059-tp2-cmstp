@@ -40,6 +40,7 @@ class Grafo
         int getDemanda(int v);
 
         double gulosoCMSTP();
+        double gulosoRandomizadoCMSTP(double alpha, int numIteracoes);
 };
 
 #endif
