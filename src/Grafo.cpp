@@ -79,6 +79,36 @@ bool Grafo::lerInstancia(string nomeArquivo)
     // O depósito possui demanda 0
     demanda[deposito] = 0;
 
+    //Se for uma instancia CM, ele vai ler automaticament o arquivo priz
+    if(nomeInstancia.substr(0,2) == "cm"){
+
+        //Descobre se o tamanho é 50, 100 ou 200
+        string tamanho;
+
+        for(int i = 2; isdigit(nomeInstancia[i]); i++){
+            tamanho += nomeInstancia[i];
+        }
+
+        string arquivoPriz = "priz" + tamanho + "r.dat";
+
+        ifstream arquivoDemandas(arquivoPriz);
+
+        if(!arquivoDemandas.is_open()){
+            cout << "Erro ao abrir o arquivo de damandas: " << arquivoPriz << endl;
+            return false;
+        }
+
+        string lixo;
+        arquivoDemandas >> lixo; //pula "priz50r.dat"
+
+        for(int i = 0; i < quantidadeClientes; i++){
+            arquivoDemandas >> demanda[i];
+        }
+
+        demanda[deposito] = 0;
+        arquivoDemandas.close();
+    }
+
     // Lê a matriz de custos
     for (int i = 0; i < n; i++)
     {
@@ -95,78 +125,3 @@ bool Grafo::lerInstancia(string nomeArquivo)
 
     return true;
 }
-
-
-/*//Heuristica gulosa para o problema CMSTP
-void Grafo::gulosoCMSTP(int raiz, int capacidade)
-{
-    //vetor para marcar quais vertices ja foram incluidos na solucao
-    vector<bool> visitado(vertices.size(), false);
-
-    //marca raiz como visitada
-    visitado[raiz] = true;
-
-    //guarda soma das demandas ja incluidas na solucao
-    int demandaTotal = vertices[raiz].getDemanda();
-
-    //estrutura auxiliar para guardar origem da construcao da arvore
-    vector<int> origemNo(vertices.size(), -1);
-
-    //loop principal que vai tentar expandir a arvore
-    while(true)
-    {
-        //inicializa menor custo com um valor muito alto pra evitar problema na comparacao
-        double menorCusto = 999999;
-
-        //melhor aresta encontrada nesta iteracao
-        int melhorOrigem = -1;
-        int melhorDestino = -1;
-
-        //for pra percorrer todos os vertices do grafo
-        for(int i = 0; i < vertices.size(); i++)
-        {
-            //só considera vertices que ja estao na solucao
-            if(!visitado[i])
-                continue;
-
-            //percorre todas as arestas saindo do vertice atual
-            for(int j = 0; j < adj[i].size(); j++)
-            {
-                //pega o vertice destino da aresta
-                int destino = adj[i][j].getDestino();
-
-                //se destino ja foi visitado ignora
-                if(visitado[destino])
-                    continue;
-
-                //pega a demanda do vertice destino
-                int demanda = vertices[destino].getDemanda();
-
-                //verifica capacidade
-                if(demandaTotal + demanda > capacidade)
-                    continue;
-
-                //escolhe menor custo
-                if(adj[i][j].getCusto() < menorCusto)
-                {
-                    menorCusto = adj[i][j].getCusto();
-                    melhorOrigem = i;
-                    melhorDestino = destino;
-                }
-            }
-        }
-
-        //se nao achou nenhuma aresta valida, encerra
-        if(melhorDestino == -1 || melhorOrigem == -1)
-            break;
-
-        //marca vertice como incluido
-        visitado[melhorDestino] = true;
-
-        //registra origem
-        origemNo[melhorDestino] = melhorOrigem;
-
-        //atualiza demanda
-        demandaTotal += vertices[melhorDestino].getDemanda();
-    }
-}*/
