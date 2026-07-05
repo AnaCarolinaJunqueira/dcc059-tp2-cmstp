@@ -75,8 +75,11 @@ bool Grafo::lerInstancia(string nomeArquivo)
     // O depósito possui demanda 0
     demanda[deposito] = 0;
 
-    // Instancia cm tem demandas no priz (detecta pelo nome do arquivo)
-    bool ehInstanciaCM = nomeArquivo.find("cm") != string::npos;
+    size_t barra = nomeArquivo.find_last_of("/\\");
+    string nomeBase = (barra != string::npos) ? nomeArquivo.substr(barra + 1) : nomeArquivo;
+
+    // Instancia cm tem demandas no priz (detecta pelo nome do arquiv)
+    bool ehInstanciaCM = nomeBase.size() >= 2 && nomeBase.substr(0, 2) == "cm";
 
     //Se for uma instancia CM, ele vai ler automaticament o arquivo priz
     if(ehInstanciaCM){
@@ -85,7 +88,6 @@ bool Grafo::lerInstancia(string nomeArquivo)
         string tamanho = to_string(totalVertices);
 
         string diretorio;
-        size_t barra = nomeArquivo.find_last_of("/\\");
         if(barra != string::npos){
             diretorio = nomeArquivo.substr(0, barra + 1);
         }
@@ -232,7 +234,6 @@ double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
     double melhorCustoGeral = 99999999.0;
     double somaSolucoes = 0.0;
     int qtdSolucoes = 0;
-    melhorAlphaReativo = -1;
 
     // Estrutura simples para organizar as arestas candidatas
     struct ArestaCandidata {
