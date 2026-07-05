@@ -18,6 +18,7 @@ void Grafo::criarGrafo(int quantidadedeVertices)
 {
     n = quantidadedeVertices;
     matriz.assign(n, vector<double>(n,0));
+    demanda.assign(n, 0); 
 }
 
 void Grafo::setDeposito(int d){
