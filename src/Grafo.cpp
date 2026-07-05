@@ -12,6 +12,8 @@ Grafo::Grafo(){
     n = 0;
     deposito = -1;
     capacidade = 0;
+    mediaSolucoes = 0;
+    melhorAlphaReativo = -1;
 }
 
 void Grafo::criarGrafo(int quantidadedeVertices)
@@ -56,23 +58,16 @@ bool Grafo::lerInstancia(string nomeArquivo)
         return false;
     }
 
-    string nomeInstancia;
-    int quantidadeClientes;
+    int totalVertices;
+    arquivo >> totalVertices;
 
-    // Lê o nome da instância
-    arquivo >> nomeInstancia;
-
-    // Lê a quantidade de clientes
-    arquivo >> quantidadeClientes;
-
-    // Cria o grafo (clientes + depósito)
-    criarGrafo(quantidadeClientes + 1);
+    criarGrafo(totalVertices);
 
     // O depósito é o último vértice
-    deposito = quantidadeClientes;
+    deposito = totalVertices - 1;
 
     // Nas instâncias tc e te todos os clientes têm demanda 1
-    for (int i = 0; i < quantidadeClientes; i++)
+    for (int i = 0; i < totalVertices; i++)
     {
         demanda[i] = 1;
     }
@@ -80,17 +75,22 @@ bool Grafo::lerInstancia(string nomeArquivo)
     // O depósito possui demanda 0
     demanda[deposito] = 0;
 
+    // Instancia cm tem demandas no priz (detecta pelo nome do arquivo)
+    bool ehInstanciaCM = nomeArquivo.find("cm") != string::npos;
+
     //Se for uma instancia CM, ele vai ler automaticament o arquivo priz
-    if(nomeInstancia.substr(0,2) == "cm"){
+    if(ehInstanciaCM){
 
-        //Descobre se o tamanho é 50, 100 ou 200
-        string tamanho;
+        // Monta o caminho do priz na mesma pasta da instancia 
+        string tamanho = to_string(totalVertices);
 
-        for(int i = 2; isdigit(nomeInstancia[i]); i++){
-            tamanho += nomeInstancia[i];
+        string diretorio;
+        size_t barra = nomeArquivo.find_last_of("/\\");
+        if(barra != string::npos){
+            diretorio = nomeArquivo.substr(0, barra + 1);
         }
 
-        string arquivoPriz = "priz" + tamanho + "r.dat";
+        string arquivoPriz = diretorio + "priz" + tamanho + "r.dat";
 
         ifstream arquivoDemandas(arquivoPriz);
 
@@ -99,10 +99,8 @@ bool Grafo::lerInstancia(string nomeArquivo)
             return false;
         }
 
-        string lixo;
-        arquivoDemandas >> lixo; //pula "priz50r.dat"
-
-        for(int i = 0; i < quantidadeClientes; i++){
+        // Le as demandas dos clientes no priz
+        for(int i = 0; i < totalVertices - 1; i++){
             arquivoDemandas >> demanda[i];
         }
 
@@ -118,6 +116,9 @@ bool Grafo::lerInstancia(string nomeArquivo)
             double custo;
             arquivo >> custo;
 
+            // Na diagonal, 0 ou 1000 significa sem aresta (ignora)
+            if (i == j) custo = 0;
+
             inserirAresta(i, j, custo);
         }
     }
@@ -127,13 +128,35 @@ bool Grafo::lerInstancia(string nomeArquivo)
     return true;
 }
 
+void Grafo::imprimirSolucao() {
+    if (arestasMelhorSolucao.empty()) {
+        cout << "Nenhuma solucao valida encontrada." << endl;
+        return;
+    }
+
+    // Uma aresta por linha: origem destino 
+    cout << "Arestas da solucao (origem destino):" << endl;
+    for (int i = 0; i < (int)arestasMelhorSolucao.size(); i++) {
+        cout << arestasMelhorSolucao[i].first << " " << arestasMelhorSolucao[i].second << endl;
+    }
+}
+
+double Grafo::getMediaSolucoes() const {
+    return mediaSolucoes;
+}
+
+double Grafo::getMelhorAlphaReativo() const {
+    return melhorAlphaReativo;
+}
+
 double Grafo::gulosoCMSTP() {
     vector<bool> visitado(n, false);
     visitado[deposito] = true;
     vector<int> idRamo(n, -1);
     vector<int> cargaRamo(n, 0);
+    vector<pair<int, int>> arestasAtual;
     double custoTotal = 0.0;
-    int verticesConectados = 1; 
+    int verticesConectados = 1;
 
     while (verticesConectados < n) {
         double menorCusto = 99999999.0;
@@ -184,6 +207,7 @@ double Grafo::gulosoCMSTP() {
         visitado[melhorDestino] = true;
         custoTotal += menorCusto;
         verticesConectados++;
+        arestasAtual.push_back({melhorOrigem, melhorDestino});
 
         // Atualiza as cargas dos ramos
         if (melhorOrigem == deposito) {
@@ -195,12 +219,20 @@ double Grafo::gulosoCMSTP() {
             cargaRamo[subarvoreDaOrigem] += demanda[melhorDestino];
         }
     }
+
+    // Guarda a arvore se conectou todos os vertices
+    if (verticesConectados == n) {
+        arestasMelhorSolucao = arestasAtual;
+    }
     
     return custoTotal;
 }
 
 double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
     double melhorCustoGeral = 99999999.0;
+    double somaSolucoes = 0.0;
+    int qtdSolucoes = 0;
+    melhorAlphaReativo = -1;
 
     // Estrutura simples para organizar as arestas candidatas
     struct ArestaCandidata {
@@ -216,6 +248,7 @@ double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
 
         vector<int> idRamo(n, -1);
         vector<int> cargaRamo(n, 0);
+        vector<pair<int, int>> arestasAtual;
 
         double custoTotal = 0.0;
         int verticesConectados = 1;
@@ -279,6 +312,7 @@ double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
             visitado[escolhida.destino] = true;
             custoTotal += escolhida.custo;
             verticesConectados++;
+            arestasAtual.push_back({escolhida.origem, escolhida.destino});
 
             if (escolhida.origem == deposito) {
                 idRamo[escolhida.destino] = escolhida.destino;
@@ -290,10 +324,112 @@ double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
             }
         }
 
-        // Se conectou todo mundo e o custo foi o menor visto até agora, salva!
-        if (solucaoValida && custoTotal < melhorCustoGeral) {
-            melhorCustoGeral = custoTotal;
+        // Se conectou todo mundo e o custo foi o menor visto até agora, salva
+        if (solucaoValida) {
+            somaSolucoes += custoTotal;
+            qtdSolucoes++;
+
+            if (custoTotal < melhorCustoGeral) {
+                melhorCustoGeral = custoTotal;
+                arestasMelhorSolucao = arestasAtual;
+            }
         }
     }
+
+    if (qtdSolucoes > 0) {
+        mediaSolucoes = somaSolucoes / qtdSolucoes;
+    } else {
+        mediaSolucoes = 0;
+    }
+
+    return melhorCustoGeral;
+}
+
+double Grafo::gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int numIteracoes, int tamanhoBloco) {
+    int quantidadeAlphas = alphas.size();
+
+    // Todos os alfas comecam com a mesma chance
+    vector<double> probabilidades(quantidadeAlphas, 1.0 / quantidadeAlphas);
+    vector<double> somaCustos(quantidadeAlphas, 0.0);
+    vector<int> contagem(quantidadeAlphas, 0);
+
+    double melhorCustoGeral = 99999999.0;
+    double somaSolucoes = 0.0;
+    int qtdSolucoes = 0;
+    melhorAlphaReativo = -1;
+
+    for (int iter = 0; iter < numIteracoes; iter++) {
+        // Sorteia qual alfa usar nessa iteracao
+        double sorteio = (double)rand() / RAND_MAX;
+        double acumulado = 0.0;
+        int indiceAlpha = 0;
+
+        for (int j = 0; j < quantidadeAlphas; j++) {
+            acumulado += probabilidades[j];
+            if (sorteio <= acumulado) {
+                indiceAlpha = j;
+                break;
+            }
+        }
+
+        // Roda o randomizado uma vez com esse alfa
+        vector<pair<int, int>> arvoreAnterior = arestasMelhorSolucao;
+        double custoTotal = gulosoRandomizadoCMSTP(alphas[indiceAlpha], 1);
+        if (custoTotal >= 99999999.0) {
+            continue;
+        }
+
+        somaSolucoes += custoTotal;
+        qtdSolucoes++;
+
+        if (custoTotal < melhorCustoGeral) {
+            melhorCustoGeral = custoTotal;
+            melhorAlphaReativo = alphas[indiceAlpha];
+        } else {
+            // Descarta arvore ruim e mantem a melhor anterior
+            arestasMelhorSolucao = arvoreAnterior;
+        }
+
+        // Acumula custos do bloco para recalcular probabilidades depois
+        somaCustos[indiceAlpha] += custoTotal;
+        contagem[indiceAlpha]++;
+
+        bool fimDoBloco = ((iter + 1) % tamanhoBloco == 0) || (iter == numIteracoes - 1);
+        if (!fimDoBloco) {
+            continue;
+        }
+
+        // Atualiza probabilidades: alfa com menor media ganha mais chance
+        vector<double> novasProbabilidades(quantidadeAlphas, 0.0);
+        double somaInversas = 0.0;
+
+        for (int j = 0; j < quantidadeAlphas; j++) {
+            if (contagem[j] > 0) {
+                double mediaCusto = somaCustos[j] / contagem[j];
+                novasProbabilidades[j] = 1.0 / mediaCusto;
+                somaInversas += novasProbabilidades[j];
+            } else {
+                novasProbabilidades[j] = probabilidades[j];
+                somaInversas += novasProbabilidades[j];
+            }
+        }
+
+        if (somaInversas > 0) {
+            for (int j = 0; j < quantidadeAlphas; j++) {
+                probabilidades[j] = novasProbabilidades[j] / somaInversas;
+            }
+        }
+
+        // Zera contadores para o proximo bloco
+        somaCustos.assign(quantidadeAlphas, 0.0);
+        contagem.assign(quantidadeAlphas, 0);
+    }
+
+    if (qtdSolucoes > 0) {
+        mediaSolucoes = somaSolucoes / qtdSolucoes;
+    } else {
+        mediaSolucoes = 0;
+    }
+
     return melhorCustoGeral;
 }

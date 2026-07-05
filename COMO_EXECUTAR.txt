@@ -1,0 +1,29 @@
+CMSTP - Capacitated Minimum Spanning Tree Problem
+=================================================
+
+Compilacao (Linux):
+  make
+
+Executavel gerado: ./cmstp
+
+Parametros obrigatorios:
+  --algoritmo    guloso | randomizado | reativo
+  --instancia    caminho do arquivo de instancia
+  --capacidade   valor de Q
+
+Parametros opcionais:
+  --alpha        alfa do randomizado (padrao 0.3)
+  --alphas       lista de alfas do reativo (padrao 0.1,0.3,0.5)
+  --iteracoes    numero de iteracoes (padrao 30 no randomizado, 300 no reativo)
+  --bloco        tamanho do bloco do reativo (padrao 30)
+  --semente      semente de randomizacao (padrao data/hora)
+
+Exemplos:
+
+  ./cmstp --algoritmo guloso --instancia instancias/capmst1/tc40-1.txt --capacidade 5
+
+  ./cmstp --algoritmo randomizado --instancia instancias/capmst1/tc40-1.txt --capacidade 5 --alpha 0.3 --iteracoes 30 --semente 42
+
+  ./cmstp --algoritmo reativo --instancia instancias/capmst2/cm50r1.dat --capacidade 200 --alphas 0.1,0.3,0.5 --iteracoes 300 --bloco 30 --semente 42
+
+A cada execucao, uma linha e adicionada ao arquivo CSV com data, instancia, parametros, semente, tempo e melhor custo.

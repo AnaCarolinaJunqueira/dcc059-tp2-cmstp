@@ -24,6 +24,13 @@ class Grafo
         //matriz de custos
         vector<vector<double>> matriz;
 
+        // arestas da melhor solucao encontrada
+        vector<pair<int, int>> arestasMelhorSolucao;
+
+        // estatisticas dos algoritmos randomizados 
+        double mediaSolucoes;
+        double melhorAlphaReativo;
+
     public:
         Grafo();
 
@@ -41,6 +48,10 @@ class Grafo
         bool lerInstancia(string nomeArquivo);
         double gulosoCMSTP();
         double gulosoRandomizadoCMSTP(double alpha, int numIteracoes);
+        double gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int numIteracoes, int tamanhoBloco);
+        void imprimirSolucao();
+        double getMediaSolucoes() const;
+        double getMelhorAlphaReativo() const;
 };
 
 #endif
