@@ -1,14 +1,20 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -O2
+
 TARGET = cmstp
-SRC = src/main.cpp src/Grafo.cpp
+TARGET_EXP = experimentos
 
-all: $(TARGET)
+SRC = src/Grafo.cpp src/Experimentos.cpp
 
-$(TARGET): $(SRC) src/Grafo.hpp
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
+all: $(TARGET) $(TARGET_EXP)
+
+$(TARGET): src/main.cpp $(SRC) src/Grafo.hpp src/Experimentos.hpp
+	$(CXX) $(CXXFLAGS) -o $(TARGET) src/main.cpp $(SRC)
+
+$(TARGET_EXP): src/main_experimentos.cpp $(SRC) src/Grafo.hpp src/Experimentos.hpp
+	$(CXX) $(CXXFLAGS) -o $(TARGET_EXP) src/main_experimentos.cpp $(SRC)
 
 clean:
-	rm -f $(TARGET) resultados.csv
+	rm -f $(TARGET) $(TARGET_EXP) resultados.csv
 
 .PHONY: all clean
