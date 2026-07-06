@@ -153,6 +153,7 @@ double Grafo::getMelhorAlphaReativo() const {
     return melhorAlphaReativo;
 }
 
+/*
 double Grafo::gulosoCMSTP() {
     vector<bool> visitado(n, false);
     visitado[deposito] = true;
@@ -230,8 +231,10 @@ double Grafo::gulosoCMSTP() {
     }
     
     return custoTotal;
-}
+} 
+*/
 
+/*
 double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
     double melhorCustoGeral = 99999999.0;
     double somaSolucoes = 0.0;
@@ -347,7 +350,9 @@ double Grafo::gulosoRandomizadoCMSTP(double alpha, int numIteracoes) {
 
     return melhorCustoGeral;
 }
+*/
 
+/*
 double Grafo::gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int numIteracoes, int tamanhoBloco) {
     int quantidadeAlphas = alphas.size();
 
@@ -436,3 +441,4 @@ double Grafo::gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int nu
 
     return melhorCustoGeral;
 }
+*/
