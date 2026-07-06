@@ -60,6 +60,7 @@ class Grafo
         int getCapacidade();
 
         void setArestasMelhorSolucao(vector<pair<int, int>> arestas);
+        void setMediaSolucoes(double media);
 };
 
 #endif

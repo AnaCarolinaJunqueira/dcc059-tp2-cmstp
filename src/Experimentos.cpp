@@ -89,12 +89,13 @@ void Experimentos::executarRandomizado(string arquivo, int capacidade, double al
 
         Grafo g;
         LeitorInstancia leitor;
+        Algoritmos algoritmos;
         leitor.lerInstancia(g, arquivo);
         g.setCapacidade(capacidade);
 
         auto inicio = chrono::high_resolution_clock::now();
         
-        double custo = g.gulosoRandomizadoCMSTP(alpha, iteracoes);
+        double custo = algoritmos.gulosoRandomizadoCMSTP(g, alpha, iteracoes);
 
         auto fim = chrono::high_resolution_clock::now();
 

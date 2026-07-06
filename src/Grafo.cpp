@@ -462,3 +462,8 @@ void Grafo::setArestasMelhorSolucao(vector<pair<int, int>> arestas)
 {
     arestasMelhorSolucao = arestas;
 }
+
+void Grafo::setMediaSolucoes(double media)
+{
+    mediaSolucoes = media;
+}

@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
         alphaStr = to_string(alpha);
         iterStr = to_string(iteracoes);
 
-        custo = g.gulosoRandomizadoCMSTP(alpha, iteracoes);
+        custo = algoritmos.gulosoRandomizadoCMSTP(g, alpha, iteracoes);
         cout << "Algoritmo: randomizado" << endl;
         cout << "Alpha: " << alpha << " | Iteracoes: " << iteracoes << endl;
     }
