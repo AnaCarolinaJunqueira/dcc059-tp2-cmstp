@@ -1,5 +1,6 @@
 #include "Experimentos.hpp"
 #include "LeitorInstancia.hpp"
+#include "Algoritmos.hpp"
 #include "Grafo.hpp"
 #include <iostream>
 #include <filesystem>
@@ -63,13 +64,14 @@ void Experimentos::executarGuloso(string arquivo, int capacidade){
 
         Grafo g;
         LeitorInstancia leitor;
+        Algoritmos algoritmos;
 
         leitor.lerInstancia(g, arquivo);
         g.setCapacidade(capacidade);
 
         auto inicio = chrono::high_resolution_clock::now();
 
-        double custo = g.gulosoCMSTP();
+        double custo = algoritmos.gulosoCMSTP(g);
 
         auto fim = chrono::high_resolution_clock::now();
 

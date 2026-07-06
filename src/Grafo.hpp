@@ -31,6 +31,7 @@ class Grafo
         double mediaSolucoes; //! Não faz parte do objeto grafo, ele entrega solução
         double melhorAlphaReativo; //! Não faz parte do objeto grafo, ele entrega solução
 
+
     public:
         Grafo();
 
@@ -52,6 +53,13 @@ class Grafo
         void imprimirSolucao();
         double getMediaSolucoes() const;
         double getMelhorAlphaReativo() const;
+
+        //métodos públicos para acessar atributos privados
+        int getNumeroVertices();
+        int getDeposito();
+        int getCapacidade();
+
+        void setArestasMelhorSolucao(vector<pair<int, int>> arestas);
 };
 
 #endif

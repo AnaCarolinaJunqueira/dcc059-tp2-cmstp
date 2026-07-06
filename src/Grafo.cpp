@@ -442,3 +442,23 @@ double Grafo::gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int nu
     return melhorCustoGeral;
 }
 */
+
+int Grafo::getNumeroVertices()
+{
+    return n;
+}
+
+int Grafo::getDeposito()
+{
+    return deposito;
+}
+
+int Grafo::getCapacidade()
+{
+    return capacidade;
+}
+
+void Grafo::setArestasMelhorSolucao(vector<pair<int, int>> arestas)
+{
+    arestasMelhorSolucao = arestas;
+}

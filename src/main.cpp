@@ -1,5 +1,6 @@
 #include "Grafo.hpp"
 #include "LeitorInstancia.hpp"
+#include "Algoritmos.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -141,6 +142,7 @@ int main(int argc, char* argv[])
 
     Grafo g;
     LeitorInstancia leitor;
+    Algoritmos algoritmos;
 
     if (!leitor.lerInstancia(g, instancia)) {
         cout << "Erro ao ler a instância!" << endl;
@@ -162,7 +164,7 @@ int main(int argc, char* argv[])
 
     // Roda o algoritmo escolhido
     if (algoritmo == "guloso") {
-        custo = g.gulosoCMSTP();
+        custo = algoritmos.gulosoCMSTP(g);
         cout << "Algoritmo: guloso" << endl;
     }
     else if (algoritmo == "randomizado") {
