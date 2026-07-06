@@ -1,5 +1,8 @@
 #include "Algoritmos.hpp"
 
+#include <algorithm>
+#include <cmath>
+
 double Algoritmos::gulosoCMSTP(Grafo& grafo) {
     int n = grafo.getNumeroVertices();
     vector<bool> visitado(grafo.getNumeroVertices(), false);
@@ -146,6 +149,7 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
                 break;
             }
 
+            /*
             // A Mágica do GRASP: Define o teto de custo com base no parâmetro Alfa
             double limiteCusto = menorCustoValido + alpha * (maiorCustoValido - menorCustoValido);
 
@@ -160,6 +164,24 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
             // Sorteia UMA aresta aleatória de dentro da lista restrita
             int indiceSorteado = rand() % lrc.size();
             ArestaCandidata escolhida = lrc[indiceSorteado];
+            */
+
+            // Ordena os candidatos do menor para o maior custo
+            sort(candidatas.begin(), candidatas.end(),
+                [](const ArestaCandidata& a, const ArestaCandidata& b)
+                {
+                    return a.custo < b.custo;
+                }
+            );
+
+            // Define o tamanho da Lista Restrita de Candidatos (LRC)
+            // alpha = 0   -> apenas o melhor candidato
+            // alpha = 1   -> todos os candidatos
+            int tamanhoLRC = max(1, (int)ceil(alpha * candidatas.size()));
+
+            // Sorteia um candidato dentre os melhores da LRC
+            int indiceSorteado = rand() % tamanhoLRC;
+            ArestaCandidata escolhida = candidatas[indiceSorteado];
 
             // Atualiza a árvore com a aresta sorteada
             visitado[escolhida.destino] = true;
