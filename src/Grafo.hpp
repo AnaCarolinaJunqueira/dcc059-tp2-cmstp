@@ -25,11 +25,11 @@ class Grafo
         vector<vector<double>> matriz;
 
         // arestas da melhor solucao encontrada
-        vector<pair<int, int>> arestasMelhorSolucao;
+        vector<pair<int, int>> arestasMelhorSolucao; //! Não faz parte do objeto grafo, ele entrega solução
 
         // estatisticas dos algoritmos randomizados 
-        double mediaSolucoes;
-        double melhorAlphaReativo;
+        double mediaSolucoes; //! Não faz parte do objeto grafo, ele entrega solução
+        double melhorAlphaReativo; //! Não faz parte do objeto grafo, ele entrega solução
 
     public:
         Grafo();
