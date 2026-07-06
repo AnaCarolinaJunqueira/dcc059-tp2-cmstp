@@ -85,7 +85,7 @@ void criarCabecalhoCSV(const string& arquivo) {
 void registrarCSV(const string& arquivo, const string& instancia, const string& capacidade,
                   const string& algoritmo, const string& alpha, const string& alphas,
                   const string& iteracoes, const string& bloco, unsigned int semente,
-                  double tempo, double melhorCusto, const Grafo& g) {
+                  double tempo, double melhorCusto, Grafo& g) {
     criarCabecalhoCSV(arquivo);
 
     ofstream csv(arquivo, ios::app);
@@ -104,13 +104,13 @@ void registrarCSV(const string& arquivo, const string& instancia, const string& 
         << melhorCusto << ",";
 
     if (algoritmo == "randomizado" || algoritmo == "reativo") {
-        csv << g.getMediaSolucoes() << ",";
+        csv << g.getSolucao().getMediaSolucoes() << ",";
     } else {
         csv << ",";
     }
 
-    if (algoritmo == "reativo" && g.getMelhorAlphaReativo() >= 0) {
-        csv << g.getMelhorAlphaReativo();
+    if (algoritmo == "reativo" && g.getSolucao().getMelhorAlphaReativo() >= 0) {
+        csv << g.getSolucao().getMelhorAlphaReativo();
     }
 
     csv << endl;
@@ -206,7 +206,7 @@ int main(int argc, char* argv[])
     registrarCSV("resultados.csv", instancia, capacidadeStr, algoritmo, alphaStr, alphasStr,
                  iterStr, blocoStr, semente, tempo, custo, g);
 
-    g.imprimirSolucao();
+    g.getSolucao().imprimirSolucao();
 
     return 0;
 }

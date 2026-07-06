@@ -12,8 +12,8 @@ Grafo::Grafo(){
     n = 0;
     deposito = -1;
     capacidade = 0;
-    mediaSolucoes = 0;
-    melhorAlphaReativo = -1;
+    //mediaSolucoes = 0;
+    //melhorAlphaReativo = -1;
 }
 
 void Grafo::criarGrafo(int quantidadedeVertices)
@@ -132,6 +132,7 @@ bool Grafo::lerInstancia(string nomeArquivo)
 } 
 */
 
+/*
 void Grafo::imprimirSolucao() {
     if (arestasMelhorSolucao.empty()) {
         cout << "Nenhuma solucao valida encontrada." << endl;
@@ -152,6 +153,7 @@ double Grafo::getMediaSolucoes() const {
 double Grafo::getMelhorAlphaReativo() const {
     return melhorAlphaReativo;
 }
+*/
 
 /*
 double Grafo::gulosoCMSTP() {
@@ -458,6 +460,7 @@ int Grafo::getCapacidade()
     return capacidade;
 }
 
+/*
 void Grafo::setArestasMelhorSolucao(vector<pair<int, int>> arestas)
 {
     arestasMelhorSolucao = arestas;
@@ -476,4 +479,10 @@ void Grafo::setMelhorAlphaReativo(double alpha)
 vector<pair<int, int>> Grafo::getArestasMelhorSolucao()
 {
     return arestasMelhorSolucao;
+}
+*/
+
+Solucao& Grafo::getSolucao()
+{
+    return solucao;
 }

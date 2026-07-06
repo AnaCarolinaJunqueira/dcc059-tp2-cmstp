@@ -74,7 +74,7 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
 
     // Guarda a arvore se conectou todos os vertices
     if (verticesConectados == n) {
-        grafo.setArestasMelhorSolucao(arestasAtual);
+        grafo.getSolucao().setArestasMelhorSolucao(arestasAtual);
     }
     
     return custoTotal;
@@ -184,15 +184,15 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
 
             if (custoTotal < melhorCustoGeral) {
                 melhorCustoGeral = custoTotal;
-                grafo.setArestasMelhorSolucao(arestasAtual);
+                grafo.getSolucao().setArestasMelhorSolucao(arestasAtual);
             }
         }
     }
 
     if (qtdSolucoes > 0) {
-        grafo.setMediaSolucoes(somaSolucoes / qtdSolucoes);
+        grafo.getSolucao().setMediaSolucoes(somaSolucoes / qtdSolucoes);
     } else {
-        grafo.setMediaSolucoes(0);
+        grafo.getSolucao().setMediaSolucoes(0);
     }
     return melhorCustoGeral;
 }
@@ -209,7 +209,7 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
     double melhorCustoGeral = 99999999.0;
     double somaSolucoes = 0.0;
     int qtdSolucoes = 0;
-    grafo.setMelhorAlphaReativo(-1);
+    grafo.getSolucao().setMelhorAlphaReativo(-1);
 
     for (int iter = 0; iter < numIteracoes; iter++) {
         // Sorteia qual alfa usar nessa iteracao
@@ -226,7 +226,7 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
         }
 
         // Roda o randomizado uma vez com esse alfa
-        vector<pair<int, int>> arvoreAnterior = grafo.getArestasMelhorSolucao();
+        vector<pair<int, int>> arvoreAnterior = grafo.getSolucao().getArestasMelhorSolucao();
         double custoTotal = gulosoRandomizadoCMSTP(grafo, alphas[indiceAlpha], 1);
         if (custoTotal >= 99999999.0) {
             continue;
@@ -237,10 +237,10 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
 
         if (custoTotal < melhorCustoGeral) {
             melhorCustoGeral = custoTotal;
-            grafo.setMelhorAlphaReativo(alphas[indiceAlpha]);
+            grafo.getSolucao().setMelhorAlphaReativo(alphas[indiceAlpha]);
         } else {
             // Descarta arvore ruim e mantem a melhor anterior
-            grafo.setArestasMelhorSolucao(arvoreAnterior);
+            grafo.getSolucao().setArestasMelhorSolucao(arvoreAnterior);
         }
 
         // Acumula custos do bloco para recalcular probabilidades depois
@@ -279,9 +279,9 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
     }
 
     if (qtdSolucoes > 0) {
-        grafo.setMediaSolucoes(somaSolucoes / qtdSolucoes);
+        grafo.getSolucao().setMediaSolucoes(somaSolucoes / qtdSolucoes);
     } else {
-        grafo.setMediaSolucoes(0);
+        grafo.getSolucao().setMediaSolucoes(0);
     }
 
     return melhorCustoGeral;

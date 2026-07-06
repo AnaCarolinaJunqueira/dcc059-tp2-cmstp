@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include "Solucao.hpp"
 
 using namespace std;
 
@@ -25,11 +26,13 @@ class Grafo
         vector<vector<double>> matriz;
 
         // arestas da melhor solucao encontrada
-        vector<pair<int, int>> arestasMelhorSolucao; //! Não faz parte do objeto grafo, ele entrega solução
+        //vector<pair<int, int>> arestasMelhorSolucao; //! Não faz parte do objeto grafo, ele entrega solução
 
         // estatisticas dos algoritmos randomizados 
-        double mediaSolucoes; //! Não faz parte do objeto grafo, ele entrega solução
-        double melhorAlphaReativo; //! Não faz parte do objeto grafo, ele entrega solução
+        //double mediaSolucoes; //! Não faz parte do objeto grafo, ele entrega solução
+        //double melhorAlphaReativo; //! Não faz parte do objeto grafo, ele entrega solução
+
+        Solucao solucao;
 
 
     public:
@@ -50,20 +53,23 @@ class Grafo
         //double gulosoCMSTP(); //! É um algoritmo que recebe grafo
         //double gulosoRandomizadoCMSTP(double alpha, int numIteracoes); //! É um algoritmo que recebe grafo
         //double gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int numIteracoes, int tamanhoBloco); //! É um algoritmo que recebe grafo
-        void imprimirSolucao();
-        double getMediaSolucoes() const;
-        double getMelhorAlphaReativo() const;
+        
+        //void imprimirSolucao();//! Não faz parte do objeto grafo, ele entrega solução
+        //double getMediaSolucoes() const;//! Não faz parte do objeto grafo, ele entrega solução
+        //double getMelhorAlphaReativo() const;//! Não faz parte do objeto grafo, ele entrega solução
 
         //métodos públicos para acessar atributos privados
         int getNumeroVertices();
         int getDeposito();
         int getCapacidade();
 
-        void setArestasMelhorSolucao(vector<pair<int, int>> arestas);
-        void setMediaSolucoes(double media);
+        //void setArestasMelhorSolucao(vector<pair<int, int>> arestas); //! Não faz parte do objeto grafo, ele entrega solução
+        //void setMediaSolucoes(double media); //! Não faz parte do objeto grafo, ele entrega solução
 
-        void setMelhorAlphaReativo(double alpha);
-        vector<pair<int, int>> getArestasMelhorSolucao();
+        //void setMelhorAlphaReativo(double alpha); //! Não faz parte do objeto grafo, ele entrega solução
+        //vector<pair<int, int>> getArestasMelhorSolucao(); //! Não faz parte do objeto grafo, ele entrega solução
+
+        Solucao& getSolucao();
 };
 
 #endif

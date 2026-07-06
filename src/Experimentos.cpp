@@ -101,7 +101,7 @@ void Experimentos::executarRandomizado(string arquivo, int capacidade, double al
 
         double tempo = chrono::duration<double>(fim-inicio).count();
 
-        salvarResultadoCSV(arquivo, capacidade, "randomizado", alpha, iteracoes, -1, sementeExecucao, tempo, custo, g.getMediaSolucoes(), -1);
+        salvarResultadoCSV(arquivo, capacidade, "randomizado", alpha, iteracoes, -1, sementeExecucao, tempo, custo, g.getSolucao().getMediaSolucoes(), -1);
     }
 }
 
@@ -125,7 +125,7 @@ void Experimentos::executarReativo(string arquivo, int capacidade, const vector<
         auto fim = chrono::high_resolution_clock::now();
 
         double tempo = chrono::duration<double>(fim - inicio).count();
-        salvarResultadoCSV(arquivo, capacidade, "reativo", -1, iteracoes, bloco, sementeExecucao, tempo, custo, g.getMediaSolucoes(), g.getMelhorAlphaReativo()
+        salvarResultadoCSV(arquivo, capacidade, "reativo", -1, iteracoes, bloco, sementeExecucao, tempo, custo, g.getSolucao().getMediaSolucoes(), g.getSolucao().getMelhorAlphaReativo()
         );
     }
 }
