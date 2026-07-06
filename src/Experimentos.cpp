@@ -114,16 +114,13 @@ void Experimentos::executarReativo(string arquivo, int capacidade, const vector<
 
         Grafo g;
         LeitorInstancia leitor;
+        Algoritmos algoritmos;
         leitor.lerInstancia(g, arquivo);
         g.setCapacidade(capacidade);
 
         auto inicio = chrono::high_resolution_clock::now();
 
-        double custo = g.gulosoRandomizadoReativoCMSTP(
-            alphas,
-            iteracoes,
-            bloco
-        );
+        double custo = algoritmos.gulosoRandomizadoReativoCMSTP(g, alphas, iteracoes, bloco);
 
         auto fim = chrono::high_resolution_clock::now();
 

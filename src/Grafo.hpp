@@ -61,6 +61,9 @@ class Grafo
 
         void setArestasMelhorSolucao(vector<pair<int, int>> arestas);
         void setMediaSolucoes(double media);
+
+        void setMelhorAlphaReativo(double alpha);
+        vector<pair<int, int>> getArestasMelhorSolucao();
 };
 
 #endif

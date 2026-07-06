@@ -467,3 +467,13 @@ void Grafo::setMediaSolucoes(double media)
 {
     mediaSolucoes = media;
 }
+
+void Grafo::setMelhorAlphaReativo(double alpha)
+{
+    melhorAlphaReativo = alpha;
+}
+
+vector<pair<int, int>> Grafo::getArestasMelhorSolucao()
+{
+    return arestasMelhorSolucao;
+}

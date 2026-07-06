@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
         iterStr = to_string(iteracoes);
         blocoStr = to_string(bloco);
 
-        custo = g.gulosoRandomizadoReativoCMSTP(alphas, iteracoes, bloco);
+        custo = algoritmos.gulosoRandomizadoReativoCMSTP(g, alphas, iteracoes, bloco);
         cout << "Algoritmo: reativo" << endl;
         cout << "Iteracoes: " << iteracoes << " | Bloco: " << bloco << endl;
     }

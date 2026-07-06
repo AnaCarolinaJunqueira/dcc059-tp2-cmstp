@@ -193,6 +193,96 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
         grafo.setMediaSolucoes(somaSolucoes / qtdSolucoes);
     } else {
         grafo.setMediaSolucoes(0);
+    }
+    return melhorCustoGeral;
+}
+
+double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<double>& alphas,int numIteracoes,int tamanhoBloco){
+    int n = grafo.getNumeroVertices();
+    int quantidadeAlphas = alphas.size();
+
+    // Todos os alfas comecam com a mesma chance
+    vector<double> probabilidades(quantidadeAlphas, 1.0 / quantidadeAlphas);
+    vector<double> somaCustos(quantidadeAlphas, 0.0);
+    vector<int> contagem(quantidadeAlphas, 0);
+
+    double melhorCustoGeral = 99999999.0;
+    double somaSolucoes = 0.0;
+    int qtdSolucoes = 0;
+    grafo.setMelhorAlphaReativo(-1);
+
+    for (int iter = 0; iter < numIteracoes; iter++) {
+        // Sorteia qual alfa usar nessa iteracao
+        double sorteio = (double)rand() / RAND_MAX;
+        double acumulado = 0.0;
+        int indiceAlpha = 0;
+
+        for (int j = 0; j < quantidadeAlphas; j++) {
+            acumulado += probabilidades[j];
+            if (sorteio <= acumulado) {
+                indiceAlpha = j;
+                break;
+            }
+        }
+
+        // Roda o randomizado uma vez com esse alfa
+        vector<pair<int, int>> arvoreAnterior = grafo.getArestasMelhorSolucao();
+        double custoTotal = gulosoRandomizadoCMSTP(grafo, alphas[indiceAlpha], 1);
+        if (custoTotal >= 99999999.0) {
+            continue;
+        }
+
+        somaSolucoes += custoTotal;
+        qtdSolucoes++;
+
+        if (custoTotal < melhorCustoGeral) {
+            melhorCustoGeral = custoTotal;
+            grafo.setMelhorAlphaReativo(alphas[indiceAlpha]);
+        } else {
+            // Descarta arvore ruim e mantem a melhor anterior
+            grafo.setArestasMelhorSolucao(arvoreAnterior);
+        }
+
+        // Acumula custos do bloco para recalcular probabilidades depois
+        somaCustos[indiceAlpha] += custoTotal;
+        contagem[indiceAlpha]++;
+
+        bool fimDoBloco = ((iter + 1) % tamanhoBloco == 0) || (iter == numIteracoes - 1);
+        if (!fimDoBloco) {
+            continue;
+        }
+
+        // Atualiza probabilidades: alfa com menor media ganha mais chance
+        vector<double> novasProbabilidades(quantidadeAlphas, 0.0);
+        double somaInversas = 0.0;
+
+        for (int j = 0; j < quantidadeAlphas; j++) {
+            if (contagem[j] > 0) {
+                double mediaCusto = somaCustos[j] / contagem[j];
+                novasProbabilidades[j] = 1.0 / mediaCusto;
+                somaInversas += novasProbabilidades[j];
+            } else {
+                novasProbabilidades[j] = probabilidades[j];
+                somaInversas += novasProbabilidades[j];
+            }
+        }
+
+        if (somaInversas > 0) {
+            for (int j = 0; j < quantidadeAlphas; j++) {
+                probabilidades[j] = novasProbabilidades[j] / somaInversas;
+            }
+        }
+
+        // Zera contadores para o proximo bloco
+        somaCustos.assign(quantidadeAlphas, 0.0);
+        contagem.assign(quantidadeAlphas, 0);
+    }
+
+    if (qtdSolucoes > 0) {
+        grafo.setMediaSolucoes(somaSolucoes / qtdSolucoes);
+    } else {
+        grafo.setMediaSolucoes(0);
+    }
 
     return melhorCustoGeral;
 }
