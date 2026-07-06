@@ -48,6 +48,7 @@ int Grafo::getDemanda(int v){
     return demanda[v];
 }
 
+/*
 bool Grafo::lerInstancia(string nomeArquivo)
 {
     ifstream arquivo(nomeArquivo);
@@ -128,7 +129,8 @@ bool Grafo::lerInstancia(string nomeArquivo)
     arquivo.close();
 
     return true;
-}
+} 
+*/
 
 void Grafo::imprimirSolucao() {
     if (arestasMelhorSolucao.empty()) {

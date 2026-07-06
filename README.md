@@ -19,8 +19,8 @@ As instâncias utilizadas foram obtidas da OR-Library e separadas em arquivos in
 
 O projeto possui suporte para:
 
-- instâncias `capmst1`, com demandas unitárias;
-- instâncias `capmst2`, com demandas não unitárias.
+- instâncias `capmst1` com demandas unitárias;
+- instâncias `capmst2` com demandas não unitárias, usando arquivos priz para demandas.
 
 ## Compilação e execução
 

@@ -45,7 +45,7 @@ class Grafo
 
         double getCusto(int u, int v);
         int getDemanda(int v);
-        bool lerInstancia(string nomeArquivo);
+        // bool lerInstancia(string nomeArquivo);  ->Não faz parte de um objeto grafo. 
         double gulosoCMSTP();
         double gulosoRandomizadoCMSTP(double alpha, int numIteracoes);
         double gulosoRandomizadoReativoCMSTP(const vector<double>& alphas, int numIteracoes, int tamanhoBloco);

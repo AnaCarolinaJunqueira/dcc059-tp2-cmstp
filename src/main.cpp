@@ -1,4 +1,5 @@
 #include "Grafo.hpp"
+#include "LeitorInstancia.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -139,8 +140,9 @@ int main(int argc, char* argv[])
     unsigned int semente = configurarSemente(argc, argv);
 
     Grafo g;
+    LeitorInstancia leitor;
 
-    if (!g.lerInstancia(instancia)) {
+    if (!leitor.lerInstancia(g, instancia)) {
         cout << "Erro ao ler a instância!" << endl;
         return 1;
     }

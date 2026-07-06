@@ -1,4 +1,5 @@
 #include "Experimentos.hpp"
+#include "LeitorInstancia.hpp"
 #include "Grafo.hpp"
 #include <iostream>
 #include <filesystem>
@@ -61,7 +62,9 @@ void Experimentos::executarGuloso(string arquivo, int capacidade){
         srand(sementeExecucao);
 
         Grafo g;
-        g.lerInstancia(arquivo);
+        LeitorInstancia leitor;
+
+        leitor.lerInstancia(g, arquivo);
         g.setCapacidade(capacidade);
 
         auto inicio = chrono::high_resolution_clock::now();
@@ -83,7 +86,8 @@ void Experimentos::executarRandomizado(string arquivo, int capacidade, double al
         srand(sementeExecucao);
 
         Grafo g;
-        g.lerInstancia(arquivo);
+        LeitorInstancia leitor;
+        leitor.lerInstancia(g, arquivo);
         g.setCapacidade(capacidade);
 
         auto inicio = chrono::high_resolution_clock::now();
@@ -106,8 +110,8 @@ void Experimentos::executarReativo(string arquivo, int capacidade, const vector<
         srand(sementeExecucao);
 
         Grafo g;
-
-        g.lerInstancia(arquivo);
+        LeitorInstancia leitor;
+        leitor.lerInstancia(g, arquivo);
         g.setCapacidade(capacidade);
 
         auto inicio = chrono::high_resolution_clock::now();
