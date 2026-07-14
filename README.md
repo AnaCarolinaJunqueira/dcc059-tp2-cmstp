@@ -27,3 +27,7 @@ O projeto possui suporte para:
 As intruções detalhadas de execução se encontram no arquivo:
 
 - COMO_EXECUTAR.txt
+
+## Relatório
+
+- O relatório do trabalho está disponível no [Relatório no Overleaf](https://www.overleaf.com/9795928843vvftxvhbtjdr#378eb7)
