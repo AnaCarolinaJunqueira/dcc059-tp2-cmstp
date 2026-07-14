@@ -201,43 +201,32 @@ void Experimentos::salvarResultadoCSV(
 
     csv << fixed << setprecision(6);
 
-    // Instância
     csv << fs::path(instancia).filename().string() << ";";
 
-    // Capacidade
     csv << capacidade << ";";
 
-    // Algoritmo
     csv << algoritmo << ";";
 
-    // Alpha
     if (alpha >= 0)
         csv << alpha;
     csv << ";";
 
-    // Iterações
     csv << iteracoes << ";";
 
-    // Bloco
     if (bloco >= 0)
         csv << bloco;
     csv << ";";
 
-    // Semente
     csv << semente << ";";
 
-    // Tempo
     csv << tempo << ";";
 
-    // Custo
     csv << custo << ";";
 
-    // Média
     if (media >= 0)
         csv << media;
     csv << ";";
 
-    // Melhor alpha
     if (melhorAlpha >= 0)
         csv << melhorAlpha;
 

@@ -11,11 +11,9 @@
 #include <iomanip>
 using namespace std;
 
-// Inicializa a semente do rand() 
 unsigned int configurarSemente(int argc, char* argv[]) {
     unsigned int semente = (unsigned int)time(NULL);
 
-    // Se passar --semente ou -s, usa o valor informado
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
         if ((arg == "--semente" || arg == "-s") && i + 1 < argc) {
@@ -30,7 +28,6 @@ unsigned int configurarSemente(int argc, char* argv[]) {
     return semente;
 }
 
-// Pega o valor de um parametro da linha de comando
 string buscarParametro(int argc, char* argv[], const string& nome, const string& padrao) {
     for (int i = 1; i < argc; i++) {
         if (nome == argv[i] && i + 1 < argc) {
@@ -40,7 +37,6 @@ string buscarParametro(int argc, char* argv[], const string& nome, const string&
     return padrao;
 }
 
-// Converte texto tipo "0.1,0.3,0.5" em vector de alfas
 vector<double> lerAlphas(const string& texto) {
     vector<double> alphas;
     string numero;
@@ -59,7 +55,6 @@ vector<double> lerAlphas(const string& texto) {
     return alphas;
 }
 
-// Retorna data e hora atuais para o CSV
 string obterDataHora() {
     time_t agora = time(NULL);
     tm* info = localtime(&agora);
@@ -68,7 +63,6 @@ string obterDataHora() {
     return string(buffer);
 }
 
-// Cria cabecalho do CSV se o arquivo ainda nao existir
 void criarCabecalhoCSV(const string& arquivo) {
     ifstream verifica(arquivo);
     if (verifica.good()) {
@@ -81,7 +75,6 @@ void criarCabecalhoCSV(const string& arquivo) {
     csv << "data_hora,instancia,capacidade,algoritmo,alpha,alphas,iteracoes,bloco,semente,tempo_s,melhor_custo,media_custos,melhor_alpha_reativo" << endl;
 }
 
-// Registra uma linha com os dados da execucao
 void registrarCSV(const string& arquivo, const string& instancia, const string& capacidade,
                   const string& algoritmo, const string& alpha, const string& alphas,
                   const string& iteracoes, const string& bloco, unsigned int semente,
@@ -162,7 +155,6 @@ int main(int argc, char* argv[])
 
     auto inicio = chrono::high_resolution_clock::now();
 
-    // Roda o algoritmo escolhido
     if (algoritmo == "guloso") {
         custo = algoritmos.gulosoCMSTP(g);
         cout << "Algoritmo: guloso" << endl;

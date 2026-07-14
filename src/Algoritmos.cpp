@@ -18,7 +18,6 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
         int melhorOrigem = -1;
         int melhorDestino = -1;
 
-        // Procura em toda a matriz a melhor aresta possível
         for (int i = 0; i < n; i++) {
             if (!visitado[i]) continue; 
 
@@ -30,7 +29,6 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
 
                 int demandaDestino = grafo.getDemanda(j);
 
-                // Regra 1: Aresta saindo direto do depósito 
                 if (i == grafo.getDeposito()) {
                     if (demandaDestino <= grafo.getCapacidade() && custo < menorCusto) {
                         menorCusto = custo;
@@ -38,10 +36,10 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
                         melhorDestino = j;
                     }
                 } 
-                // Regra 2: Aresta saindo de um cliente 
+
                 else {
                     int idSubarvoreAtual = idRamo[i];
-                    // Verifica se a capacidade do ramo aguenta o novo cliente
+
                     if (cargaRamo[idSubarvoreAtual] + demandaDestino <= grafo.getCapacidade()) {
                         if (custo < menorCusto) {
                             menorCusto = custo;
@@ -53,7 +51,7 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
             }
         }
 
-        // Trava de segurança
+
         if (melhorOrigem == -1 || melhorDestino == -1) {
             cout << "ERRO: Trava de capacidade. Nao foi possivel conectar com Q = " << grafo.getCapacidade() << endl;
             break;
@@ -64,7 +62,7 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
         verticesConectados++;
         arestasAtual.push_back({melhorOrigem, melhorDestino});
 
-        // Atualiza as cargas dos ramos
+
         if (melhorOrigem == grafo.getDeposito()) {
             idRamo[melhorDestino] = melhorDestino; 
             cargaRamo[melhorDestino] = grafo.getDemanda(melhorDestino);
@@ -75,7 +73,7 @@ double Algoritmos::gulosoCMSTP(Grafo& grafo) {
         }
     }
 
-    // Guarda a arvore se conectou todos os vertices
+
     if (verticesConectados == n) {
         grafo.getSolucao().setArestasMelhorSolucao(arestasAtual);
     }
@@ -90,14 +88,12 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
     double somaSolucoes = 0.0;
     int qtdSolucoes = 0;
 
-    // Estrutura simples para organizar as arestas candidatas
     struct ArestaCandidata {
         int origem;
         int destino;
         double custo;
     };
 
-    // O algoritmo roda várias vezes para tentar achar a melhor combinação (o professor exige pelo menos 30)
     for (int iter = 0; iter < numIteracoes; iter++) {
         vector<bool> visitado(n, false);
         visitado[grafo.getDeposito()] = true;
@@ -115,7 +111,6 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
             double menorCustoValido = 99999999.0;
             double maiorCustoValido = -1.0;
 
-            // Encontra todas as arestas válidas 
             for (int i = 0; i < n; i++) {
                 if (!visitado[i]) continue;
 
@@ -135,7 +130,6 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
                         if (cargaRamo[idSubarvoreAtual] + demandaDestino <= grafo.getCapacidade()) ehValida = true;
                     }
 
-                    // Guarda a aresta se ela couber no ramo
                     if (ehValida) {
                         candidatas.push_back({i, j, custo});
                         if (custo < menorCustoValido) menorCustoValido = custo;
@@ -145,28 +139,10 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
             }
 
             if (candidatas.empty()) {
-                solucaoValida = false; // A árvore "travou" em um beco sem saída
+                solucaoValida = false; 
                 break;
             }
 
-            /*
-            // A Mágica do GRASP: Define o teto de custo com base no parâmetro Alfa
-            double limiteCusto = menorCustoValido + alpha * (maiorCustoValido - menorCustoValido);
-
-            // Cria a Lista Restrita de Candidatos (LRC)
-            vector<ArestaCandidata> lrc;
-            for (int k = 0; k < candidatas.size(); k++) {
-                if (candidatas[k].custo <= limiteCusto) {
-                    lrc.push_back(candidatas[k]);
-                }
-            }
-
-            // Sorteia UMA aresta aleatória de dentro da lista restrita
-            int indiceSorteado = rand() % lrc.size();
-            ArestaCandidata escolhida = lrc[indiceSorteado];
-            */
-
-            // Ordena os candidatos do menor para o maior custo
             sort(candidatas.begin(), candidatas.end(),
                 [](const ArestaCandidata& a, const ArestaCandidata& b)
                 {
@@ -174,16 +150,11 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
                 }
             );
 
-            // Define o tamanho da Lista Restrita de Candidatos (LRC)
-            // alpha = 0   -> apenas o melhor candidato
-            // alpha = 1   -> todos os candidatos
             int tamanhoLRC = max(1, (int)ceil(alpha * candidatas.size()));
 
-            // Sorteia um candidato dentre os melhores da LRC
             int indiceSorteado = rand() % tamanhoLRC;
             ArestaCandidata escolhida = candidatas[indiceSorteado];
 
-            // Atualiza a árvore com a aresta sorteada
             visitado[escolhida.destino] = true;
             custoTotal += escolhida.custo;
             verticesConectados++;
@@ -199,7 +170,6 @@ double Algoritmos::gulosoRandomizadoCMSTP(Grafo& grafo, double alpha, int numIte
             }
         }
 
-        // Se conectou todo mundo e o custo foi o menor visto até agora, salva
         if (solucaoValida) {
             somaSolucoes += custoTotal;
             qtdSolucoes++;
@@ -234,7 +204,6 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
     grafo.getSolucao().setMelhorAlphaReativo(-1);
 
     for (int iter = 0; iter < numIteracoes; iter++) {
-        // Sorteia qual alfa usar nessa iteracao
         double sorteio = (double)rand() / RAND_MAX;
         double acumulado = 0.0;
         int indiceAlpha = 0;
@@ -247,7 +216,6 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
             }
         }
 
-        // Roda o randomizado uma vez com esse alfa
         vector<pair<int, int>> arvoreAnterior = grafo.getSolucao().getArestasMelhorSolucao();
         double custoTotal = gulosoRandomizadoCMSTP(grafo, alphas[indiceAlpha], 1);
         if (custoTotal >= 99999999.0) {
@@ -261,11 +229,9 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
             melhorCustoGeral = custoTotal;
             grafo.getSolucao().setMelhorAlphaReativo(alphas[indiceAlpha]);
         } else {
-            // Descarta arvore ruim e mantem a melhor anterior
             grafo.getSolucao().setArestasMelhorSolucao(arvoreAnterior);
         }
 
-        // Acumula custos do bloco para recalcular probabilidades depois
         somaCustos[indiceAlpha] += custoTotal;
         contagem[indiceAlpha]++;
 
@@ -274,7 +240,6 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
             continue;
         }
 
-        // Atualiza probabilidades: alfa com menor media ganha mais chance
         vector<double> novasProbabilidades(quantidadeAlphas, 0.0);
         double somaInversas = 0.0;
 
@@ -295,7 +260,6 @@ double Algoritmos::gulosoRandomizadoReativoCMSTP(Grafo& grafo,const vector<doubl
             }
         }
 
-        // Zera contadores para o proximo bloco
         somaCustos.assign(quantidadeAlphas, 0.0);
         contagem.assign(quantidadeAlphas, 0);
     }
